@@ -466,7 +466,7 @@
         <location filename="../layout/TSHCommentator.ui" line="162"/>
         <location filename="../layout/TSHCommentary.ui" line="156"/>
         <source>Handle Only</source>
-        <translation>Pseudo Seulement</translation>
+        <translation>Nom d&apos;utilisateur seulement</translation>
     </message>
     <message>
         <location filename="../layout/TSHCommentator.ui" line="176"/>
