@@ -57,7 +57,7 @@ jobs:
   build:
     name: Generate Windows Release
     runs-on: ${{ matrix.os }}
-    if: github.ref == 'refs/heads/main' or github.ref == 'refs/heads/build/macos'
+    if: ${{ (github.ref == 'refs/heads/main') }} || ${{ (github.ref == 'refs/heads/build/macos') }}
     strategy:
       fail-fast: false
       matrix:
@@ -102,7 +102,7 @@ jobs:
   macos_build:
     name: Generate MacOS Release
     runs-on: ${{ matrix.os }}
-    if: github.ref == 'refs/heads/main' or github.ref == 'refs/heads/build/macos'
+    if: ${{ (github.ref == 'refs/heads/main') }} || ${{ (github.ref == 'refs/heads/build/macos') }}
     strategy:
       fail-fast: false
       matrix:
