@@ -125,7 +125,8 @@ jobs:
       - run: pip install -r dependencies/requirements.txt pyinstaller==4.10
       - run: |
           pyinstaller main.py --onefile -w --icon assets/icons/icon.ico
-          cp -avr dist/main.app TSH.app
+          ls -a dist/main.app
+          cp -r dist/main.app TSH.app
 
       - run: git pull
       - name: commit files
