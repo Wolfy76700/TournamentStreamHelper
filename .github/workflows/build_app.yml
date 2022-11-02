@@ -57,7 +57,7 @@ jobs:
   build:
     name: Generate Windows Release
     runs-on: ${{ matrix.os }}
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/main' or github.ref == 'refs/heads/build/macos'
     strategy:
       fail-fast: false
       matrix:
@@ -92,6 +92,51 @@ jobs:
           git config --local user.name "GitHub Action"
           git add TSH.exe
           git commit -m "Update exe" -a
+
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ steps.extract_branch.outputs.branch }}
+
+  macos_build:
+    name: Generate MacOS Release
+    runs-on: ${{ matrix.os }}
+    if: github.ref == 'refs/heads/main' or github.ref == 'refs/heads/build/macos'
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["macos-11"]
+    needs:
+    - build
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
+
+      - run: pip install -r dependencies/requirements.txt pyinstaller==4.10
+      - run: |
+          set PYTHONUTF8=1
+          chcp 65001
+          set PYTHONIOENCODING=utf-8
+          python scripts/gen_contributors.py
+          pyinstaller main.py --onefile -w --icon assets\icons\icon.ico
+          copy dist\main.exe TSH.app
+
+      - run: git pull
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add TSH.app
+          git commit -m "Update MacOS Release" -a
 
       - name: push changes
         uses: ad-m/github-push-action@v0.6.0
