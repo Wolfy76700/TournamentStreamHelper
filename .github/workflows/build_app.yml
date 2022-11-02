@@ -58,7 +58,7 @@ jobs:
   build:
     name: Generate Windows Release
     runs-on: ${{ matrix.os }}
-    if: ${{ (github.ref == 'refs/heads/main') || (github.ref == 'refs/heads/build/macos') }}
+    if: ${{ (github.ref == 'refs/heads/main') || (github.ref == 'refs/heads/build/win') }}
     strategy:
       fail-fast: false
       matrix:
@@ -109,7 +109,7 @@ jobs:
       matrix:
         os: ["macos-11"]
     needs:
-    - build
+    - locale_build
 
     steps:
       - uses: actions/checkout@v2
@@ -124,10 +124,6 @@ jobs:
 
       - run: pip install -r dependencies/requirements.txt pyinstaller==4.10
       - run: |
-          set PYTHONUTF8=1
-          chcp 65001
-          set PYTHONIOENCODING=utf-8
-          python scripts/gen_contributors.py
           pyinstaller main.py --onefile -w --icon assets\icons\icon.ico
           copy dist\main.exe TSH.app
 
