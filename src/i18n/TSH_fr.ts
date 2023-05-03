@@ -142,11 +142,11 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>Form</name>
     <message>
+        <location filename="../layout/TSHScoreboardPlayer.ui" line="25"/>
+        <location filename="../layout/TSHScoreboardStage.ui" line="14"/>
+        <location filename="../layout/TSHScoreboardScore.ui" line="21"/>
         <location filename="../layout/TSHScoreboardTeam.ui" line="20"/>
         <location filename="../layout/TSHThumbnailSettings.ui" line="14"/>
-        <location filename="../layout/TSHScoreboardStage.ui" line="14"/>
-        <location filename="../layout/TSHScoreboardPlayer.ui" line="25"/>
-        <location filename="../layout/TSHScoreboardScore.ui" line="21"/>
         <source>Form</source>
         <translation>Formulaire</translation>
     </message>
@@ -622,14 +622,14 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>GroupBox</name>
     <message>
-        <location filename="../layout/TSHCommentator.ui" line="29"/>
         <location filename="../layout/TSHCommentary.ui" line="23"/>
+        <location filename="../layout/TSHCommentator.ui" line="29"/>
         <source>GroupBox</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../layout/TSHCommentator.ui" line="32"/>
         <location filename="../layout/TSHCommentary.ui" line="26"/>
+        <location filename="../layout/TSHCommentator.ui" line="32"/>
         <source>Commentator 1</source>
         <translation>Commentateur 1</translation>
     </message>
@@ -656,36 +656,42 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../layout/TSHCommentator.ui" line="90"/>
         <location filename="../layout/TSHCommentary.ui" line="90"/>
+        <location filename="../layout/TSHCommentator.ui" line="96"/>
         <source>GamerTag</source>
         <translation>Pseudo</translation>
     </message>
     <message>
         <location filename="../layout/TSHCommentator.ui" line="108"/>
         <location filename="../layout/TSHCommentary.ui" line="108"/>
+        <location filename="../layout/TSHCommentator.ui" line="114"/>
         <source>REAL NAME</source>
         <translation>NOM RÉEL</translation>
     </message>
     <message>
         <location filename="../layout/TSHCommentator.ui" line="124"/>
         <location filename="../layout/TSHCommentary.ui" line="124"/>
+        <location filename="../layout/TSHCommentator.ui" line="130"/>
         <source>Real Name</source>
         <translation>Nom Réel</translation>
     </message>
     <message>
         <location filename="../layout/TSHCommentator.ui" line="140"/>
         <location filename="../layout/TSHCommentary.ui" line="140"/>
+        <location filename="../layout/TSHCommentator.ui" line="146"/>
         <source>TWITTER</source>
         <translation></translation>
     </message>
     <message>
         <location filename="../layout/TSHCommentator.ui" line="156"/>
         <location filename="../layout/TSHCommentary.ui" line="156"/>
+        <location filename="../layout/TSHCommentator.ui" line="162"/>
         <source>Handle Only</source>
         <translation>Pseudo Seulement</translation>
     </message>
     <message>
         <location filename="../layout/TSHCommentator.ui" line="172"/>
         <location filename="../layout/TSHCommentary.ui" line="170"/>
+        <location filename="../layout/TSHCommentator.ui" line="178"/>
         <source>PRONOUNS</source>
         <translation>PRONOMS</translation>
     </message>
@@ -1119,27 +1125,27 @@ p, li { white-space: pre-wrap; }
         <translation>Règles</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardStageWidget.py" line="126"/>
+        <location filename="../TSHScoreboardStageWidget.py" line="129"/>
         <source>Open {0} in a browser to stage strike.</source>
         <translation>Ouvrez {0} dans un navigateur web pour effectuer le ban des stages.</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardStageWidget.py" line="204"/>
+        <location filename="../TSHScoreboardStageWidget.py" line="242"/>
         <source>Save new</source>
         <translation>Sauvegarder le règlement</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardStageWidget.py" line="468"/>
+        <location filename="../TSHScoreboardStageWidget.py" line="443"/>
         <source>Number striked stages does not match the number of neutral stages. Should strike {0} more stage(s).</source>
         <translation>Le nombre total de bans ne correspond pas au nombre de stages neutres. Veuillez bannir {0} stages supplémentaires.</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardStageWidget.py" line="475"/>
+        <location filename="../TSHScoreboardStageWidget.py" line="450"/>
         <source>The current ruleset is valid!</source>
         <translation>Le règlement actuel est valide !</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardStageWidget.py" line="525"/>
+        <location filename="../TSHScoreboardStageWidget.py" line="500"/>
         <source>The text for banByMaxGames is invalid.</source>
         <translation>La valeur pour les bans maximums par match est invalide.</translation>
     </message>
@@ -1495,6 +1501,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../TSHScoreboardWidget.py" line="426"/>
         <location filename="../TSHThumbnailSettingsWidget.py" line="879"/>
+        <location filename="../TSHScoreboardWidget.py" line="435"/>
         <source>TSH - Thumbnail</source>
         <translation>TSH - Miniature</translation>
     </message>
