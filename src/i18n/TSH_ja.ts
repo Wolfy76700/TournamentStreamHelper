@@ -1088,8 +1088,8 @@ p, li { white-space: pre-wrap; }
         <translation>リセット</translation>
     </message>
     <message>
-        <location filename="../TSHSelectSetWindow.py" line="81"/>
-        <location filename="../TSHSelectSetWindow.py" line="83"/>
+        <location filename="../TSHSelectSetWindow.py" line="88"/>
+        <location filename="../TSHSelectSetWindow.py" line="90"/>
         <location filename="../TSHScoreboardPlayerWidget.py" line="315"/>
         <location filename="../thumbnail/main_generate_thumbnail.py" line="1126"/>
         <source>Player {0}</source>
@@ -1176,22 +1176,27 @@ p, li { white-space: pre-wrap; }
         <translation>プレイヤーを選ぶ</translation>
     </message>
     <message>
-        <location filename="../TSHSelectSetWindow.py" line="31"/>
+        <location filename="../TSHSelectSetWindow.py" line="33"/>
         <source>Show completed sets</source>
         <translation>完了したセットを表示する</translation>
     </message>
     <message>
-        <location filename="../TSHSelectSetWindow.py" line="78"/>
+        <location filename="../TSHSelectSetWindow.py" line="36"/>
+        <source>Show complete pairs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../TSHSelectSetWindow.py" line="85"/>
         <source>Stream</source>
         <translation>配信</translation>
     </message>
     <message>
-        <location filename="../TSHSelectSetWindow.py" line="79"/>
+        <location filename="../TSHSelectSetWindow.py" line="86"/>
         <source>Phase</source>
         <translation>フェーズ</translation>
     </message>
     <message>
-        <location filename="../TSHSelectSetWindow.py" line="80"/>
+        <location filename="../TSHSelectSetWindow.py" line="87"/>
         <source>Match</source>
         <translation>ラウンド</translation>
     </message>
@@ -1392,7 +1397,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../TournamentStreamHelper.py" line="544"/>
         <location filename="../TSHScoreboardWidget.py" line="718"/>
         <location filename="../TournamentStreamHelper.py" line="538"/>
-        <location filename="../TSHSelectSetWindow.py" line="101"/>
+        <location filename="../TSHSelectSetWindow.py" line="111"/>
         <source>(</source>
         <translation>(</translation>
     </message>
@@ -1402,7 +1407,7 @@ p, li { white-space: pre-wrap; }
         <location filename="../TournamentStreamHelper.py" line="544"/>
         <location filename="../TSHScoreboardWidget.py" line="718"/>
         <location filename="../TournamentStreamHelper.py" line="538"/>
-        <location filename="../TSHSelectSetWindow.py" line="102"/>
+        <location filename="../TSHSelectSetWindow.py" line="112"/>
         <source>)</source>
         <translation>)</translation>
     </message>
