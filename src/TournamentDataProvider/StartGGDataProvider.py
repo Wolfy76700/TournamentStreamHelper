@@ -33,6 +33,8 @@ class StartGGDataProvider(TournamentDataProvider):
     TournamentPhaseGroupQuery = None
     StreamQueueQuery = None
 
+    player_seeds = {}
+
     def __init__(self, url, threadpool, parent) -> None:
         super().__init__(url, threadpool, parent)
         self.name = "StartGG"
@@ -607,9 +609,9 @@ class StartGGDataProvider(TournamentDataProvider):
                         player.get("id"),
                         0
                     ]
-                if deep_get(_set, "slots", [])[i].get("entrant", {}).get("seeds", []) != []:
-                    playerData["seed"] = deep_get(_set, "slots", [])[i].get(
-                    "entrant", {}).get("seeds", [])[0].get("seedNum", 0)
+                if playerData["id"][0] is not None:
+                    playerData["seed"] = self.player_seeds[playerData["id"][0]]
+                
                 players[i].append(playerData)
 
         setData["entrants"] = players
@@ -854,7 +856,6 @@ class StartGGDataProvider(TournamentDataProvider):
         })
 
     def GetStreamQueue(self, progress_callback=None):
-        print("========================================")
 
         try:
             data = requests.post(
@@ -1405,6 +1406,7 @@ class StartGGDataProvider(TournamentDataProvider):
                         playerData = StartGGDataProvider.ProcessEntrantData(entrant)
                         if deep_get(team, "seeds", []) != []:
                             playerData["seed"] = deep_get(team, "seeds", [])[0].get("seedNum", 0)
+                            self.player_seeds[playerData["id"][0]] = playerData["seed"]
                         players.append(playerData)
 
                 TSHPlayerDB.AddPlayers(players)
