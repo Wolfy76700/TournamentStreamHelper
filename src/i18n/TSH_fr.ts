@@ -1085,18 +1085,18 @@ p, li { white-space: pre-wrap; }
         <translation>Charger les résultats du tournoi</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardPlayerWidget.py" line="61"/>
-        <location filename="../TSHScoreboardPlayerWidget.py" line="722"/>
+        <location filename="../TSHScoreboardPlayerWidget.py" line="62"/>
+        <location filename="../TSHScoreboardPlayerWidget.py" line="732"/>
         <source>Save new player</source>
         <translation>Sauvegarder le joueur</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardPlayerWidget.py" line="74"/>
+        <location filename="../TSHScoreboardPlayerWidget.py" line="75"/>
         <source>Delete player entry</source>
         <translation>Supprimer le joueur</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardPlayerWidget.py" line="87"/>
+        <location filename="../TSHScoreboardPlayerWidget.py" line="88"/>
         <source>Clear</source>
         <translation>Effacer</translation>
     </message>
@@ -1109,7 +1109,7 @@ p, li { white-space: pre-wrap; }
         <translation>Joueur {0}</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardPlayerWidget.py" line="719"/>
+        <location filename="../TSHScoreboardPlayerWidget.py" line="729"/>
         <source>Update player</source>
         <translation>Mettre à jour le joueur</translation>
     </message>
