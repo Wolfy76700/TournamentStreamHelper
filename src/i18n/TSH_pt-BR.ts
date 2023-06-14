@@ -1122,7 +1122,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../TSHSelectSetWindow.py" line="88"/>
         <location filename="../TSHSelectSetWindow.py" line="90"/>
-        <location filename="../TSHScoreboardPlayerWidget.py" line="315"/>
+        <location filename="../TSHScoreboardPlayerWidget.py" line="318"/>
         <location filename="../thumbnail/main_generate_thumbnail.py" line="1126"/>
         <source>Player {0}</source>
         <translation>Jogador {0}</translation>
