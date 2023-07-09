@@ -48,6 +48,10 @@
       "Suomi",
       "Finnish"
     ],
+    "fr-gallo": [
+      "Galo (France)",
+      "Gallo (France)"
+    ],
     "he-IL": [
       "\u05e2\u05d1\u05e8\u05d9\u05ea",
       "Hebrew"
@@ -158,6 +162,10 @@
     ]
   },
   "languages": {
+    "br-FR": [
+      "Brezhoneg (Frañs)",
+      "Breton (France)"
+    ],
     "de-AT": [
       "Deutsch (\u00d6sterreich)",
       "German (Austria)"
