@@ -7,6 +7,12 @@ i18n.use(LanguageDetector).init({
     en: {
       translations: require("./locales/en.json"),
     },
+    br: {
+      translations: require("./locales/br.json"),
+    },
+    it: {
+      translations: require("./locales/it.json"),
+    },
     pt: {
       translations: require("./locales/pt.json"),
     },
