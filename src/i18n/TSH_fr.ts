@@ -1484,6 +1484,11 @@ p, li { white-space: pre-wrap; }
         <source>Make sure that your tournament URL is correctly formatted and points to an existing event, and try again.</source>
         <translation>Veuillez vérifier que votre URL de tournoi est correctement formatée et pointe vers un évènement existant, puis réessayer.</translation>
     </message>
+    <message>
+        <location filename="../Helpers/TSHCountryHelper.py" line="178"/>
+        <source>Custom Flags</source>
+        <translation>Drapeaux additionnels</translation>
+    </message>
 </context>
 <context>
     <name>punctuation</name>
