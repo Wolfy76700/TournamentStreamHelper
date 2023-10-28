@@ -1396,24 +1396,24 @@ p, li { white-space: pre-wrap; }
         <location filename="../TSHScoreboardWidget.py" line="730"/>
         <location filename="../TournamentStreamHelper.py" line="714"/>
         <source>(</source>
-        <translation type="unfinished"></translation>
+        <translation>(</translation>
     </message>
     <message>
         <location filename="../TSHSelectSetWindow.py" line="121"/>
         <location filename="../TSHScoreboardWidget.py" line="730"/>
         <location filename="../TournamentStreamHelper.py" line="714"/>
         <source>)</source>
-        <translation type="unfinished"></translation>
+        <translation>)</translation>
     </message>
     <message>
         <location filename="../TournamentStreamHelper.py" line="894"/>
         <source>[</source>
-        <translation type="unfinished"></translation>
+        <translation>[</translation>
     </message>
     <message>
         <location filename="../TournamentStreamHelper.py" line="894"/>
         <source>]</source>
-        <translation type="unfinished"></translation>
+        <translation>]</translation>
     </message>
 </context>
 <context>
