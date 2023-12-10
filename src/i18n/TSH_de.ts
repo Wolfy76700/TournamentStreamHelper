@@ -1278,7 +1278,7 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../TSHScoreboardPlayerWidget.py" line="69"/>
-        <location filename="../TSHScoreboardPlayerWidget.py" line="786"/>
+        <location filename="../TSHScoreboardPlayerWidget.py" line="787"/>
         <source>Save new player</source>
         <translation>Neuen Spieler speichern</translation>
     </message>
@@ -1293,7 +1293,7 @@ p, li { white-space: pre-wrap; }
         <translation>Zurücksetzen</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardPlayerWidget.py" line="783"/>
+        <location filename="../TSHScoreboardPlayerWidget.py" line="784"/>
         <source>Update player</source>
         <translation>Spielereintrag aktualisieren</translation>
     </message>
@@ -1357,11 +1357,6 @@ p, li { white-space: pre-wrap; }
         <translation>aktuelles Stream-Set laden</translation>
     </message>
     <message>
-        <location filename="../TSHScoreboardWidget.py" line="213"/>
-        <source>Track station sets</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="../TSHScoreboardWidget.py" line="272"/>
         <location filename="../TSHScoreboardWidget.py" line="312"/>
         <source>TEAM {0}</source>
@@ -1376,6 +1371,11 @@ p, li { white-space: pre-wrap; }
         <location filename="../TSHThumbnailSettingsWidget.py" line="930"/>
         <source>Warning</source>
         <translation>ACHTUNG</translation>
+    </message>
+    <message>
+        <location filename="../TSHScoreboardWidget.py" line="213"/>
+        <source>Track sets from a stream or station</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../TSHScoreboardWidget.py" line="495"/>
