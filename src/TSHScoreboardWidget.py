@@ -17,6 +17,7 @@ from .StateManager import StateManager
 from .TSHTournamentDataProvider import TSHTournamentDataProvider
 from .TSHStatsUtil import TSHStatsUtil
 from .TSHHotkeys import TSHHotkeys
+from .TSHPlayerDB import TSHPlayerDB
 
 from .thumbnail import main_generate_thumbnail as thumbnail
 from .TSHThumbnailSettingsWidget import *
@@ -460,9 +461,10 @@ class TSHScoreboardWidget(QWidget):
             thumbnailPath = thumbnail.generate(
                 settingsManager=SettingsManager, scoreboardNumber=self.scoreboardNumber)
             msgBox.setText(QApplication.translate(
-                "thumb_app", "The thumbnail has been generated here:") + " ")
+                "thumb_app", "The thumbnail has been generated here:") + " " + thumbnailPath + "\n\n" + QApplication.translate(
+                "thumb_app", "The video title and description have also been generated."))
             msgBox.setIcon(QMessageBox.NoIcon)
-            msgBox.setInformativeText(thumbnailPath)
+            # msgBox.setInformativeText(thumbnailPath)
 
             thumbnail_settings = SettingsManager.Get("thumbnail_config")
             if thumbnail_settings.get("open_explorer"):
@@ -947,5 +949,10 @@ class TSHScoreboardWidget(QWidget):
         # Avoid loading data from the previous set
         if str(data.get("id")) != str(self.lastSetSelected):
             return
-
+        
+        if SettingsManager.Get("general.disable_overwrite", False):
+            for entrant in data.get("entrants"):
+                if(entrant[0].get("gamerTag") in TSHPlayerDB.database):
+                    entrant[0] = entrant[0] | TSHPlayerDB.database[entrant[0].get("gamerTag")]
+        
         self.ChangeSetData(data)
