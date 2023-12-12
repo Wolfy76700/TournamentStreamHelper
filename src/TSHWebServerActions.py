@@ -8,6 +8,9 @@ from .TSHStatsUtil import TSHStatsUtil
 from .SettingsManager import SettingsManager
 from loguru import logger
 from .TSHGameAssetManager import TSHGameAssetManager
+from .TSHBracketView import TSHBracketView
+from .TSHBracketWidget import TSHBracketWidget
+from .TSHTournamentDataProvider import TSHTournamentDataProvider
 
 import logging
 log = logging.getLogger('werkzeug')
@@ -144,6 +147,14 @@ class WebServerActions(QThread):
             self.scoreboard.GetScoreboard(scoreboard).signals.CommandScoreChange.emit(1, -1)
         return "OK"
 
+    
+    def team_color(self, scoreboard, team, color):
+        if str(team) == "1":
+            self.scoreboard.GetScoreboard(scoreboard).signals.CommandTeamColor.emit(0, color)
+        else:
+            self.scoreboard.GetScoreboard(scoreboard).signals.CommandTeamColor.emit(1, color)
+        return "OK"
+
     def set_route(self,
                   scoreboard,
                   bestOf=None,
@@ -222,6 +233,9 @@ class WebServerActions(QThread):
     def swap_teams(self, scoreboard):
         self.scoreboard.GetScoreboard(scoreboard).signals.SwapTeams.emit()
         return "OK"
+    
+    def get_swap(self, scoreboard):
+        return str(self.scoreboard.GetScoreboard(scoreboard).teamsSwapped)
 
     def open_sets(self, scoreboard):
         self.scoreboard.GetScoreboard(scoreboard).signals.SetSelection.emit()
@@ -298,6 +312,12 @@ class WebServerActions(QThread):
         self.scoreboard.GetScoreboard(scoreboard).playerNumber.setValue(1)
         self.scoreboard.GetScoreboard(scoreboard).charNumber.setValue(1)
         self.scoreboard.GetScoreboard(scoreboard).CommandClearAll()
+        return "OK"
+    
+    def update_bracket(self):
+        id = TSHTournamentDataProvider.instance.provider.GetTournamentPhases()[0].get("groups")[0].get("id")
+        data = TSHTournamentDataProvider.instance.provider.GetTournamentPhaseGroup(id)
+        TSHTournamentDataProvider.instance.signals.tournament_phasegroup_updated.emit(data)
         return "OK"
 
     def load_set(self, scoreboard, set=None):

@@ -10,6 +10,7 @@ from PIL import Image
 import time
 from loguru import logger
 from .Helpers.TSHDictHelper import deep_get, deep_set, deep_unset, deep_clone
+from .SettingsManager import SettingsManager
 
 
 class StateManager:
@@ -43,11 +44,15 @@ class StateManager:
                     with open("./out/program_state.json", 'wb', buffering=8192) as file:
                         # logger.info("SaveState")
                         StateManager.state.update({"timestamp": time.time()})
-                        file.write(orjson.dumps(StateManager.state, option=orjson.OPT_NON_STR_KEYS | orjson.OPT_INDENT_2))
+                        file.write(orjson.dumps(
+                            StateManager.state, option=orjson.OPT_NON_STR_KEYS | orjson.OPT_INDENT_2))
                         StateManager.state.pop("timestamp")
 
-                    StateManager.ExportText(StateManager.lastSavedState, ref_diff)
-                    StateManager.lastSavedState = deep_clone(StateManager.state)
+                    if not SettingsManager.Get("general.disable_export", False):
+                        StateManager.ExportText(
+                            StateManager.lastSavedState, ref_diff)
+                    StateManager.lastSavedState = deep_clone(
+                        StateManager.state)
 
                 diff = DeepDiff(StateManager.lastSavedState,
                                 StateManager.state)
@@ -55,11 +60,13 @@ class StateManager:
                 if len(diff) > 0:
                     try:
                         if StateManager.webServer is not None:
-                            StateManager.webServer.emit('program_state', StateManager.state)
+                            StateManager.webServer.emit(
+                                'program_state', StateManager.state)
                     except Exception as e:
                         logger.error(traceback.format_exc())
 
-                    exportThread = threading.Thread(target=partial(ExportAll, ref_diff=diff))
+                    exportThread = threading.Thread(
+                        target=partial(ExportAll, ref_diff=diff))
                     StateManager.threads.append(exportThread)
                     exportThread.start()
 
@@ -77,7 +84,7 @@ class StateManager:
 
     def Set(key: str, value):
         with StateManager.lock:
-            StateManager.lastSavedState = deep_clone(StateManager.state)
+            # StateManager.lastSavedState = deep_clone(StateManager.state)
 
             deep_set(StateManager.state, key, value)
 
@@ -87,7 +94,7 @@ class StateManager:
 
     def Unset(key: str):
         with StateManager.lock:
-            StateManager.lastSavedState = deep_clone(StateManager.state)
+            # StateManager.lastSavedState = deep_clone(StateManager.state)
             deep_unset(StateManager.state, key)
             if StateManager.saveBlocked == 0:
                 StateManager.SaveState()

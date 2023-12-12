@@ -62,14 +62,17 @@ def generate_youtube(scoreboard_id=1, use_phase_name=True):
                 character_data = current_player_data.get("character")
                 for character_id in character_data.keys():
                     current_character_data = character_data.get(character_id)
-                    character_names.append(current_character_data.get("name"))
-                player_names.append(player_name.replace(" [L]", ""))
-                if character_names:
-                    player_names_with_characters.append(
-                        f"{player_name.replace(' [L]', '')} ({', '.join(character_names)})")
-                else:
-                    player_names_with_characters.append(
-                        player_name.replace(" [L]", ""))
+                    if current_character_data.get("name"):
+                        character_names.append(current_character_data.get("name"))
+                if player_name:
+                    if player_name.replace(' [L]', ''):
+                        player_names.append(player_name.replace(" [L]", ""))
+                        if character_names:
+                            player_names_with_characters.append(
+                                f"{player_name.replace(' [L]', '')} ({', '.join(character_names)})")
+                        else:
+                            player_names_with_characters.append(
+                                player_name.replace(" [L]", ""))
             title_long = f'{title_long}' + \
                 " / ".join(player_names_with_characters)
             title_short = f'{title_short}' + " / ".join(player_names)
@@ -163,13 +166,25 @@ def generate_top_n_alt_text(bracket_type="DOUBLE_ELIMINATION"):
             current_player_data = player_data.get(player_id)
             player_name = current_player_data.get("mergedName")
             character_data = current_player_data.get("character")
+            if current_player_data.get("country"):
+                country_code = current_player_data.get("country").get("code")
+            else:
+                country_code = ""
             for character_id in character_data.keys():
                 current_character_data = character_data.get(character_id)
-                character_names.append(current_character_data.get("name"))
+                if current_character_data.get("name"):
+                    character_names.append(current_character_data.get("name"))
             player_text = f"{player_name}"
-            if character_names:
-                player_text = player_text + f" ({', '.join(character_names)})"
-            players_text.append(player_text)
+            characters_text = ' / '.join(character_names)
+            if country_code:
+                if characters_text:
+                    characters_text = country_code + ", " + characters_text
+                else:
+                    characters_text = country_code
+            if characters_text:
+                player_text = player_text + f" ({characters_text})"
+            if player_name:
+                players_text.append(player_text)
         placement = CalculatePlacement(int(team_id), bracket_type)
         players_text = " / ".join(players_text)
         if team_name:

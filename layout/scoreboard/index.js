@@ -1,6 +1,4 @@
 LoadEverything().then(() => {
-
-  let scoreboardNumber = 1;
   
   gsap.config({ nullTargetWarn: false, trialWarn: false });
 
@@ -61,12 +59,12 @@ LoadEverything().then(() => {
     let data = event.data;
     let oldData = event.oldData;
 
-    let isTeams = Object.keys(data.score[scoreboardNumber].team["1"].player).length > 1;
+    let isTeams = Object.keys(data.score[window.scoreboardNumber].team["1"].player).length > 1;
 
     if (!isTeams) {
       for (const [t, team] of [
-        data.score[scoreboardNumber].team["1"],
-        data.score[scoreboardNumber].team["2"],
+        data.score[window.scoreboardNumber].team["1"],
+        data.score[window.scoreboardNumber].team["2"],
       ].entries()) {
         for (const [p, player] of [team.player["1"]].entries()) {
           if (player) {
@@ -98,8 +96,7 @@ LoadEverything().then(() => {
             await CharacterDisplay(
               $(`.p${t + 1}.container .character_container`),
               {
-                asset_key: "base_files/icon",
-                source: `score.${scoreboardNumber}.team.${t + 1}`,
+                source: `score.${window.scoreboardNumber}.team.${t + 1}`,
               },
               event
             );
@@ -161,11 +158,14 @@ LoadEverything().then(() => {
             }
           }
         }
+        if(team.color) {
+          document.querySelector(':root').style.setProperty(`--p${t + 1}-score-bg-color`, team.color);
+        }
       }
     } else {
       for (const [t, team] of [
-        data.score[scoreboardNumber].team["1"],
-        data.score[scoreboardNumber].team["2"],
+        data.score[window.scoreboardNumber].team["1"],
+        data.score[window.scoreboardNumber].team["2"],
       ].entries()) {
         let teamName = "";
 
@@ -197,7 +197,7 @@ LoadEverything().then(() => {
           $(`.p${t + 1}.container .character_container`),
           {
             asset_key: "base_files/icon",
-            source: `score.${scoreboardNumber}.team.${t + 1}`,
+            source: `score.${window.scoreboardNumber}.team.${t + 1}`,
             slice_character: [0, 1],
           },
           event
@@ -214,16 +214,20 @@ LoadEverything().then(() => {
         SetInnerHtml($(`.p${t + 1}.container .score`), String(team.score));
 
         SetInnerHtml($(`.p${t + 1}.container .sponsor-container`), "");
+
+        if(team.color) {
+          document.querySelector(':root').style.setProperty(`--p${t + 1}-score-bg-color`, team.color);
+        }
       }
     }
 
     SetInnerHtml($(".tournament_name"), data.tournamentInfo.tournamentName);
 
-    SetInnerHtml($(".match"), data.score[scoreboardNumber].match);
+    SetInnerHtml($(".match"), data.score[window.scoreboardNumber].match);
 
     let phaseTexts = [];
-    if (data.score[scoreboardNumber].phase) phaseTexts.push(data.score[scoreboardNumber].phase);
-    if (data.score[scoreboardNumber].best_of_text) phaseTexts.push(data.score[scoreboardNumber].best_of_text);
+    if (data.score[window.scoreboardNumber].phase) phaseTexts.push(data.score[window.scoreboardNumber].phase);
+    if (data.score[window.scoreboardNumber].best_of_text) phaseTexts.push(data.score[window.scoreboardNumber].best_of_text);
 
     SetInnerHtml($(".phase"), phaseTexts.join(" - "));
   };

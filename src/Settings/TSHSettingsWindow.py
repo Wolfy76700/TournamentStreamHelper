@@ -62,6 +62,21 @@ class TSHSettingsWindow(QDialog):
             False
         ))
 
+        generalSettings.append((
+            QApplication.translate(
+                "settings.disable_export", "Disable TSH file exporting"),
+            "disable_export",
+            "checkbox",
+            False
+        ))
+        
+        generalSettings.append((
+            QApplication.translate(
+                "settings.disable_overwrite", "Do not override existing values in local_players.csv (takes effect on next restart)"),
+            "disable_overwrite",
+            "checkbox",
+            False
+        ))
 
         self.add_setting_widget(QApplication.translate(
             "settings", "General"), SettingsWidget("general", generalSettings))

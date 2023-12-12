@@ -36,6 +36,8 @@ class StartGGDataProvider(TournamentDataProvider):
     StreamQueueQuery = None
     MainPhaseQuery = None
     SeedsQuery = None
+    StationsQuery = None
+    StationSetsQuery = None
 
     player_seeds = {}
 
@@ -44,13 +46,18 @@ class StartGGDataProvider(TournamentDataProvider):
         self.name = "StartGG"
         self.getMatchThreadPool = QThreadPool()
         self.getRecentSetsThreadPool = QThreadPool()
-    
+
     # Queries the provided URL until a proper 200 status code has been provided back
-    # 
+    #
     # This should work fine in theory unless an API restriction is added
-    def QueryRequests(self, url=None, type=None, headers=None, jsonParams=None, params=None):
+    def QueryRequests(self, url=None, type=None, headers={}, jsonParams=None, params=None):
         requestCode = 0
         data = None
+        headers.update({
+            "client-version": "20",
+            "Content-Type": "application/json",
+            "User-Agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Mobile Safari/537.36"
+        })
         while requestCode != 200:
             data = type(
                 url,
@@ -68,10 +75,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "TournamentDataQuery",
                     "variables": {
@@ -110,10 +113,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "TournamentIconQuery",
                     "variables": {
@@ -150,10 +149,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "TournamentPhasesQuery",
                     "variables": {
@@ -192,10 +187,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "TournamentPhaseGroupQuery",
                     "variables": {
@@ -208,11 +199,7 @@ class StartGGDataProvider(TournamentDataProvider):
 
             oldData = self.QueryRequests(
                 f"https://api.smash.gg/phase_group/{id}",
-                type=requests.get,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                }
+                type=requests.get
             )
 
             seeds = deep_get(data, "data.phaseGroup.seeds.nodes", [])
@@ -261,7 +248,7 @@ class StartGGDataProvider(TournamentDataProvider):
             finalSets = {}
 
             for s in sets:
-                #logger.info(s)
+                # logger.info(s)
 
                 round = int(s.get("round"))
 
@@ -362,6 +349,10 @@ class StartGGDataProvider(TournamentDataProvider):
             finalResult.update(result.get("new", {}))
             finalResult.update(result.get("old", {}))
 
+            if result.get("old", {}).get("winnerProgression"):
+                finalResult["round_name"] = TSHLocaleHelper.matchNames.get(
+                    "qualifier").format(result.get("old", {}).get("winnerProgression"))
+
             if result.get("new", {}).get("isOnline") == False:
                 finalResult["bestOf"] = None
 
@@ -398,10 +389,6 @@ class StartGGDataProvider(TournamentDataProvider):
         data = self.QueryRequests(
             "https://www.start.gg/api/-/gql",
             type=requests.post,
-            headers={
-                "client-version": "20",
-                'Content-Type': 'application/json'
-            },
             jsonParams={
                 "operationName": "SetQuery",
                 "variables": {
@@ -431,10 +418,6 @@ class StartGGDataProvider(TournamentDataProvider):
                 data = self.QueryRequests(
                     "https://www.start.gg/api/-/gql",
                     type=requests.post,
-                    headers={
-                        "client-version": "20",
-                        'Content-Type': 'application/json'
-                    },
                     jsonParams={
                         "operationName": "EventMatchListQuery",
                         "variables": {
@@ -461,6 +444,60 @@ class StartGGDataProvider(TournamentDataProvider):
                 page += 1
 
                 logger.info(f"Fetching sets... {page}/{totalPages}")
+
+            return (final_data)
+        except Exception as e:
+            logger.error(traceback.format_exc())
+            return (final_data)
+        return ([])
+
+    def GetStations(self, progress_callback=None):
+        try:
+            logger.info("Get stations")
+
+            final_data = []
+
+            logger.info("Fetching stations")
+
+            data = self.QueryRequests(
+                "https://www.start.gg/api/-/gql",
+                type=requests.post,
+                jsonParams={
+                    "operationName": "Stations",
+                    "variables": {
+                        "eventSlug": self.url.split("start.gg/")[1],
+                    },
+                    "query": StartGGDataProvider.StationsQuery
+                }
+            )
+
+            stations = deep_get(data, "data.event.stations.nodes", [])
+            queues = deep_get(data, "data.event.tournament.streamQueue", [])
+
+            if stations is not None:
+                for station in stations:
+                    stream = ""
+
+                    if queues is not None:
+                        stream = next((deep_get(s, "stream.streamName", None) for s in queues if str(
+                            deep_get(s, "stream.id", None)) == str(station.get("streamId"))), "")
+
+                    final_data.append({
+                        "id": station.get("id"),
+                        "identifier": station.get("number"),
+                        "type": "station",
+                        "stream": stream
+                    })
+
+            if queues is not None:
+                for queue in queues:
+                    if queue.get("stream") is not None:
+                        stream = queue.get("stream")
+                        final_data.append({
+                            "id": stream.get("id"),
+                            "identifier": stream.get("streamName"),
+                            "type": "stream"
+                        })
 
             return (final_data)
         except Exception as e:
@@ -522,6 +559,7 @@ class StartGGDataProvider(TournamentDataProvider):
             "p1_name": p1.get("entrant", {}).get("name", "") if p1 and p1.get("entrant", {}) != None else "",
             "p2_name": p2.get("entrant", {}).get("name", "") if p2 and p2.get("entrant", {}) != None else "",
             "stream": _set.get("stream", {}).get("streamName", "") if _set.get("stream", {}) != None else "",
+            "station": _set.get("station", {}).get("number", "") if _set.get("station", {}) != None else "",
             "isOnline": deep_get(_set, "event.isOnline"),
         }
 
@@ -878,7 +916,9 @@ class StartGGDataProvider(TournamentDataProvider):
             "bestOf": respTasks.get("entities", {}).get("sets", {}).get("bestOf", None),
             "team1losers": team1losers,
             "team2losers": team2losers,
-            "currPlayer": currPlayer
+            "currPlayer": currPlayer,
+            "winnerProgression": respTasks.get("entities", {}).get("sets", {}).get("wProgressingName", None),
+            "loserProgression": respTasks.get("entities", {}).get("sets", {}).get("lProgressingName", None)
         })
 
     def GetStreamQueue(self, progress_callback=None):
@@ -886,10 +926,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "StreamQueueQuery",
                     "variables": {
@@ -913,7 +949,6 @@ class StartGGDataProvider(TournamentDataProvider):
                 streamName = q.get("stream", {}).get("streamName", "")
                 queueData = {}
                 for setIndex, _set in enumerate(q.get("sets", [])):
-
 
                     phase_name = deep_get(_set, "phaseGroup.phase.name")
                     if deep_get(_set, "phaseGroup.phase.groupCount") > 1:
@@ -1028,10 +1063,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "StreamSetsQuery",
                     "variables": {
@@ -1063,6 +1094,43 @@ class StartGGDataProvider(TournamentDataProvider):
 
         return streamSet
 
+    def GetStationMatchId(self, stationId):
+        stationSet = None
+
+        try:
+            data = self.QueryRequests(
+                "https://www.start.gg/api/-/gql",
+                type=requests.post,
+                jsonParams={
+                    "operationName": "StationSetsQuery",
+                    "variables": {
+                        "eventSlug": self.url.split("start.gg/")[1],
+                        "filters": {
+                            "state": [1, 2, 4, 5, 6],
+                            "hideEmpty": True
+                        }
+                    },
+                    "query": StartGGDataProvider.StationSetsQuery
+                }
+            )
+
+            sets = deep_get(data, "data.event.sets.nodes", [])
+
+            print("SETS", sets, stationId)
+
+            sets = [s for s in sets if str(deep_get(
+                s, "station.id", "-1")) == str(stationId)]
+
+            print("SETS", sets)
+
+            if len(sets) > 0:
+                stationSet = sets[0]
+
+        except Exception as e:
+            logger.error(traceback.format_exc())
+
+        return stationSet
+
     def GetUserMatchId(self, user):
         matches = re.match(
             r".*start.gg/(user/[^/]*)", user)
@@ -1077,10 +1145,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "UserSetQuery",
                     "variables": {
@@ -1102,10 +1166,6 @@ class StartGGDataProvider(TournamentDataProvider):
                 data = self.QueryRequests(
                     "https://www.start.gg/api/-/gql",
                     type=requests.post,
-                    headers={
-                        "client-version": "20",
-                        'Content-Type': 'application/json'
-                    },
                     jsonParams={
                         "operationName": "UserSetQuery",
                         "variables": {
@@ -1158,10 +1218,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "PlayerLastSetsQuery",
                     "variables": {
@@ -1229,10 +1285,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "TournamentHistoryDataQuery",
                     "variables": {
@@ -1323,10 +1375,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "RecentSetsQuery",
                     "variables": {
@@ -1441,10 +1489,6 @@ class StartGGDataProvider(TournamentDataProvider):
                 data = self.QueryRequests(
                     "https://www.start.gg/api/-/gql",
                     type=requests.post,
-                    headers={
-                        "client-version": "20",
-                        'Content-Type': 'application/json'
-                    },
                     jsonParams={
                         "operationName": "EventEntrantsListQuery",
                         "variables": {
@@ -1466,7 +1510,8 @@ class StartGGDataProvider(TournamentDataProvider):
                     for j, entrant in enumerate(team.get("participants", [])):
                         playerData = StartGGDataProvider.ProcessEntrantData(
                             entrant)
-                        playerData["seed"] = self.player_seeds.get(playerData["id"][0])
+                        playerData["seed"] = self.player_seeds.get(
+                            playerData["id"][0])
                         players.append(playerData)
 
                 TSHPlayerDB.AddPlayers(players)
@@ -1588,16 +1633,12 @@ class StartGGDataProvider(TournamentDataProvider):
             ]
 
         return (playerData)
-    
+
     def GetSeeds(self):
         try:
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "TournamentMainPhaseQuery",
                     "variables": {
@@ -1617,10 +1658,6 @@ class StartGGDataProvider(TournamentDataProvider):
                 data = self.QueryRequests(
                     "https://www.start.gg/api/-/gql",
                     type=requests.post,
-                    headers={
-                        "client-version": "20",
-                        'Content-Type': 'application/json'
-                    },
                     jsonParams={
                         "operationName": "PhaseSeeds",
                         "variables": {
@@ -1633,13 +1670,14 @@ class StartGGDataProvider(TournamentDataProvider):
 
                 totalPages = deep_get(
                     data, "data.phase.seeds.pageInfo.totalPages", 0)
-                
+
                 seeds = deep_get(data, "data.phase.seeds.nodes", [])
 
                 for seed in seeds:
                     for player in seed.get("players"):
-                        self.player_seeds[player.get("id", 0)] = seed.get("seedNum")
-                
+                        self.player_seeds[player.get(
+                            "id", 0)] = seed.get("seedNum")
+
                 page += 1
         except:
             logger.error(traceback.format_exc())
@@ -1649,10 +1687,6 @@ class StartGGDataProvider(TournamentDataProvider):
             data = self.QueryRequests(
                 "https://www.start.gg/api/-/gql",
                 type=requests.post,
-                headers={
-                    "client-version": "20",
-                    'Content-Type': 'application/json'
-                },
                 jsonParams={
                     "operationName": "TournamentStandingsQuery",
                     "variables": {
@@ -1732,3 +1766,9 @@ StartGGDataProvider.MainPhaseQuery = f.read()
 
 f = open("src/TournamentDataProvider/StartGGTournamentSeedsQuery.txt", 'r')
 StartGGDataProvider.SeedsQuery = f.read()
+
+f = open("src/TournamentDataProvider/StartGGStationsQuery.txt", 'r')
+StartGGDataProvider.StationsQuery = f.read()
+
+f = open("src/TournamentDataProvider/StartGGStationSetsQuery.txt", 'r')
+StartGGDataProvider.StationSetsQuery = f.read()
