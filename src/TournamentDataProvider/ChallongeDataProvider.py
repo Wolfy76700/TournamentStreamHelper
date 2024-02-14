@@ -86,6 +86,9 @@ class ChallongeDataProvider(TournamentDataProvider):
             prefix = re.findall(r"//([^.]+)", self.url)[0]
             return prefix
 
+    def CleanInputString(self, txt):
+        return re.sub(r"\s*[\(\{\[].*?[\)\}\]]", "", txt).strip()
+
     def GetEnglishUrl(self):
         prefix = self.GetCommunityPrefix()
         if prefix:
@@ -550,11 +553,11 @@ class ChallongeDataProvider(TournamentDataProvider):
                         match["phase"] = "Round Robin"
                     else:
                         match["phase"] = "Bracket"
-                    if r == len(matches.values()) - 1:
-                        if m == 0:
-                            match["isGF"] = True
-                        elif m == 1:
-                            match["isGFR"] = True
+                        if r == len(matches.values()) - 1:
+                            if m == 0:
+                                match["isGF"] = True
+                            elif m == 1:
+                                match["isGFR"] = True
                     match["round_name"] = ChallongeDataProvider.TranslateRoundName(
                         match, rounds, CHALLONGE_BRACKET_TYPE(data.get("requested_plotter")))
                     all_matches.append(match)
@@ -589,8 +592,9 @@ class ChallongeDataProvider(TournamentDataProvider):
 
                         # For final rounds in group, use "Qualifier"
                         if int(match.get("round")) in [maxRoundNumber, minRoundNumber]:
+
                             match["round_name"] = TSHLocaleHelper.matchNames.get("qualifier").format(
-                                TSHLocaleHelper.phaseNames.get("final_stage"))
+                                self.CleanInputString(TSHLocaleHelper.phaseNames.get("final_stage")))
                             match["winnerProgression"] = TSHLocaleHelper.phaseNames.get(
                                 "final_stage")
 
@@ -665,7 +669,8 @@ class ChallongeDataProvider(TournamentDataProvider):
                 match, "queued_for_station.stream_url", None)
 
         if stream:
-            stream = stream.split("twitch.tv/")[1].replace("/", "")
+            if "twitch.tv" in stream:
+                stream = stream.split("twitch.tv/")[1].replace("/", "")
 
         team1losers = False
         team2losers = False
