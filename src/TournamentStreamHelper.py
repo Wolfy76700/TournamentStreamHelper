@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from .Helpers.TSHLocaleHelper import TSHLocaleHelper
-from .Helpers.TSHDirHelper import TSHResolve
 import faulthandler
 import shutil
 import zipfile
@@ -23,6 +21,8 @@ import qtpy
 from qtpy.QtGui import *
 from qtpy.QtWidgets import *
 from qtpy.QtCore import *
+from .Helpers.TSHLocaleHelper import TSHLocaleHelper
+from .Helpers.TSHDirHelper import TSHResolve
 from packaging.version import parse
 from loguru import logger
 from pathlib import Path
