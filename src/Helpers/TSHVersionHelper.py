@@ -15,6 +15,16 @@ def get_beta_status(feature):
 
     return(feature in versions.get("beta_features", []))
 
+def get_known_issue(feature):
+    try:
+        versions = json.load(
+            open(TSHResolve('./assets/versions.json'), encoding='utf-8'))
+    except Exception as e:
+        logger.error("Local version file not found")
+        versions = {}
+
+    return(feature in versions.get("known_issues", []))
+
 def add_beta_label(text, feature):
     if get_beta_status(feature):
         beta_label = "[" + str(QApplication.translate("app", "beta")).upper() + "] "

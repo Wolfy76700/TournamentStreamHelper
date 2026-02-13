@@ -8,7 +8,8 @@ from .StateManager import StateManager
 from .TSHGameAssetManager import TSHGameAssetManager
 from .TournamentDataProvider.TournamentDataProvider import TournamentDataProvider
 from .TournamentDataProvider.StartGGDataProvider import StartGGDataProvider
-from .Helpers.TSHVersionHelper import get_supported_providers
+from .Helpers.TSHVersionHelper import get_supported_providers, get_known_issue
+import textwrap
 from loguru import logger
 
 from .Workers import Worker
@@ -130,10 +131,13 @@ class TSHTournamentDataProvider(QObject):
         layout = QVBoxLayout()
         inp.setLayout(layout)
 
-        inp.layout().addWidget(QLabel(
-            QApplication.translate("app", "Paste the tournament URL.")+ "\n" + QApplication.translate("app", "For StartGG, the link must contain the /event/ part") + "\n" + QApplication.translate("app", "Supported providers:") + " " + ", ".join(get_supported_providers())
+        info_text = QApplication.translate("app", "Paste the tournament URL.")+ "\n" + QApplication.translate("app", "For StartGG, the link must contain the /event/ part") + "\n" + QApplication.translate("app", "Supported providers:") + " " + ", ".join(get_supported_providers())
 
-        ))
+        if get_known_issue("tournament_load_crash"):
+            info_text = info_text + "\n\n" + "⚠️ " + QApplication.translate("app", "Warning").upper() + "\n" \
+                + "\n".join(textwrap.wrap(QApplication.translate("issue", "The current version of TournamentStreamHelper is known to crash when setting a new tournament URL. If this happens, please restart TSH. Your new URL should still be saved."), 100))
+
+        inp.layout().addWidget(QLabel(info_text))
 
         lineEdit = QLineEdit()
         okButton = QPushButton("OK")
