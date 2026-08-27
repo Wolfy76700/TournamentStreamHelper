@@ -615,15 +615,21 @@ class TSHScoreboardWidget(QWidget):
     
     def ExportLosersStatus(self, team, team_name, is_in_losers):
         merged_team_name = deepcopy(team_name)
-        if not team_name:
+        if not team_name: # If no manually set team name, add generated team name based on player names
             players = StateManager.Get(f"score.{self.scoreboardNumber}.team.{team}.player", {})
             player_names = []
+            players_names_only = []
             for index in players.keys():
-                if players[index].get("team"):
-                    player_names.append(f'{players[index].get("team", "")} | {players[index].get("name", "")}')
-                else:
-                    player_names.append(players[index].get("name", ""))
-            merged_team_name = " / ".join(player_names)
+                if players[index].get("name", ""):
+                    players_names_only.append(players[index].get("name", ""))
+                    if players[index].get("team"):
+                        player_names.append(f'{players[index].get("team", "")} | {players[index].get("name", "")}')
+                    else:
+                        player_names.append(players[index].get("name", ""))
+            if len(player_names) >= 2: # If the team has 2 players or more, only export the names of the players in the team name
+                merged_team_name = " / ".join(players_names_only)
+            else:
+                merged_team_name = " / ".join(player_names)
         losers_indicator = ""
         if is_in_losers:
             losers_indicator = "[L]"
